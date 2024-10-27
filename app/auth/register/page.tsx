@@ -6,9 +6,12 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false); // State to manage loading status
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        setMessage(''); // Clear previous messages
+        setLoading(true); // Set loading to true when the request starts
 
         // Call the external register API directly
         try {
@@ -32,6 +35,8 @@ const Register = () => {
         } catch (error) {
             setMessage('An error occurred while registering.');
             console.error('Error during registration:', error);
+        } finally {
+            setLoading(false); // Set loading to false when the request is completed
         }
     };
 
@@ -63,8 +68,12 @@ const Register = () => {
                             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                         />
                     </div>
-                    <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        Register
+                    <button 
+                        type="submit" 
+                        className={`w-full p-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'}`} 
+                        disabled={loading} // Disable button when loading
+                    >
+                        {loading ? 'Registering...' : 'Register'} {/* Change button text based on loading state */}
                     </button>
                 </form>
             </div>

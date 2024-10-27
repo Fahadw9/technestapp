@@ -8,12 +8,14 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false); // State to manage loading status
     const router = useRouter(); // Hook for navigation
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setSuccess('');
+        setLoading(true); // Set loading to true when the request starts
 
         try {
             const response = await fetch('https://technestapi-production.up.railway.app/auth/login', {
@@ -42,6 +44,8 @@ const Login = () => {
 
         } catch (err: any) {
             setError(err.message);
+        } finally {
+            setLoading(false); // Set loading to false when the request is completed
         }
     };
 
@@ -72,8 +76,12 @@ const Login = () => {
                             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                         />
                     </div>
-                    <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        Login
+                    <button 
+                        type="submit" 
+                        className={`w-full p-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'}`} 
+                        disabled={loading} // Disable button when loading
+                    >
+                        {loading ? 'Logging in...' : 'Login'} {/* Change button text based on loading state */}
                     </button>
                 </form>
                 {error && <p className="mt-4 text-center text-red-500">{error}</p>}
