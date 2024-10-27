@@ -18,6 +18,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false); // State to toggle between edit and view mode
     const [imageFile, setImageFile] = useState<File | null>(null); // State for the uploaded image
     const [loading, setLoading] = useState(true); // State to track loading
+    const [isSaving, setIsSaving] = useState(false); // State to track saving status
     const router = useRouter(); // Hook for navigation
 
     useEffect(() => {
@@ -83,6 +84,7 @@ const Profile = () => {
             return;
         }
 
+        setIsSaving(true); // Disable buttons while saving
         const formData = new FormData();
         formData.append('full_name', profile.full_name);
         formData.append('email', profile.email);
@@ -111,6 +113,8 @@ const Profile = () => {
             // await fetchProfile();
         } catch (err) {
             setError((err as Error).message);
+        } finally {
+            setIsSaving(false); // Re-enable buttons after saving
         }
     };
 
@@ -182,19 +186,20 @@ const Profile = () => {
                                     onChange={handleChange}
                                     className="mt-2 w-full p-2 border rounded bg-gray-800 text-white"
                                 >
-                                    <option value="">Select Gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
                                 </select>
                                 <button
                                     onClick={handleSave}
-                                    className="mt-4 bg-blue-500 text-white p-2 rounded"
+                                    disabled={isSaving} // Disable button while saving
+                                    className={`mt-4 ${isSaving ? 'bg-gray-500' : 'bg-blue-500'} text-white p-2 rounded`}
                                 >
-                                    Save
+                                    {isSaving ? 'Saving...' : 'Save'}
                                 </button>
                                 <button
                                     onClick={() => setIsEditing(false)}
+                                    disabled={isSaving} // Disable button while saving
                                     className="mt-4 bg-gray-300 text-gray-800 p-2 rounded ml-2"
                                 >
                                     Cancel
@@ -221,7 +226,7 @@ const Profile = () => {
                                     onClick={() => setIsEditing(true)}
                                     className="mt-4 bg-blue-500 text-white p-2 rounded"
                                 >
-                                    Edit Profile
+                                    Edit
                                 </button>
                             </div>
                         )}
