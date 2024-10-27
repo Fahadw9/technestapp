@@ -5,16 +5,14 @@ import { useRouter } from 'next/navigation';
 
 const Profile = () => {
     const [email, setEmail] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const router = useRouter();
+    const [error, setError] = useState('');
+    const router = useRouter(); // Hook for navigation
 
     useEffect(() => {
         const fetchProfile = async () => {
-            const token = localStorage.getItem('jwtToken');
-
-            // Check if the token exists
+            const token = localStorage.getItem('jwtToken'); // Get token from local storage
             if (!token) {
-                setErrorMessage('YOU ARE NOT AUTHORIZED TO VIEW THIS PAGE');
+                setError('You are not authorized to view this page.');
                 return;
             }
 
@@ -23,39 +21,35 @@ const Profile = () => {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
                     },
                 });
 
-                // Check if the response is successful
                 if (!response.ok) {
-                    throw new Error('Failed to fetch profile data');
+                    throw new Error('You are not authorized to view this page.');
                 }
 
                 const data = await response.json();
-
-                // Check if the email in the response matches the expected format
-                if (data.email) {
-                    setEmail(data.email);
-                } else {
-                    setErrorMessage('YOU ARE NOT AUTHORIZED TO VIEW THIS PAGE');
-                }
-            } catch (error) {
-                setErrorMessage('YOU ARE NOT AUTHORIZED TO VIEW THIS PAGE');
+                setEmail(data.email);
+            } catch (err) {
+                setError((err as Error).message);
             }
         };
 
         fetchProfile();
     }, []);
 
-    if (errorMessage) {
-        return <p>{errorMessage}</p>;
-    }
-
     return (
-        <div>
-            <h1>Profile</h1>
-            <p>Email: {email}</p>
+        <div className="flex items-center justify-center min-h-screen bg-background p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full">
+                <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-200">Profile</h1>
+                {error ? (
+                    <p className="mt-4 text-center text-red-500">{error}</p>
+                ) : (
+                    <div className="mt-6 text-center">
+                        <p className="text-lg text-gray-700 dark:text-gray-300">Email: <span className="font-semibold">{email}</span></p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
