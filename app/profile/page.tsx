@@ -87,7 +87,6 @@ const Profile = () => {
         setIsSaving(true); // Disable buttons while saving
         const formData = new FormData();
         formData.append('full_name', profile.full_name);
-        formData.append('email', profile.email);
         formData.append('phone_number', profile.phone_number);
         formData.append('date_of_birth', profile.date_of_birth);
         formData.append('gender', profile.gender);
@@ -149,6 +148,9 @@ const Profile = () => {
                         </div>
                         {isEditing ? (
                             <div>
+                                <p className="text-lg text-gray-700 dark:text-gray-300 mt-2">
+                                    Email: <span className="font-semibold">{profile.email}</span>
+                                </p>
                                 <input
                                     type="text"
                                     name="full_name"
@@ -156,14 +158,6 @@ const Profile = () => {
                                     onChange={handleChange}
                                     className="mt-2 w-full p-2 border rounded bg-gray-800 text-white placeholder-gray-400"
                                     placeholder="Full Name"
-                                />
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={profile.email}
-                                    onChange={handleChange}
-                                    className="mt-2 w-full p-2 border rounded bg-gray-800 text-white placeholder-gray-400"
-                                    placeholder="Email"
                                 />
                                 <input
                                     type="text"
@@ -208,10 +202,10 @@ const Profile = () => {
                         ) : (
                             <div>
                                 <p className="text-lg text-gray-700 dark:text-gray-300">
-                                    Full Name: <span className="font-semibold">{profile.full_name || 'Not Set'}</span>
+                                    Email: <span className="font-semibold">{profile.email || 'Not Set'}</span>
                                 </p>
                                 <p className="text-lg text-gray-700 dark:text-gray-300">
-                                    Email: <span className="font-semibold">{profile.email || 'Not Set'}</span>
+                                    Full Name: <span className="font-semibold">{profile.full_name || 'Not Set'}</span>
                                 </p>
                                 <p className="text-lg text-gray-700 dark:text-gray-300">
                                     Phone Number: <span className="font-semibold">{profile.phone_number || 'Not Set'}</span>
