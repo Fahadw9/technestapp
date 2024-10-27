@@ -17,6 +17,7 @@ const Profile = () => {
     const [error, setError] = useState('');
     const [isEditing, setIsEditing] = useState(false); // State to toggle between edit and view mode
     const [imageFile, setImageFile] = useState<File | null>(null); // State for the uploaded image
+    const [loading, setLoading] = useState(true); // State to track loading
     const router = useRouter(); // Hook for navigation
 
     useEffect(() => {
@@ -24,6 +25,7 @@ const Profile = () => {
             const token = localStorage.getItem('jwtToken'); // Get token from local storage
             if (!token) {
                 setError('You are not authorized to view this page.');
+                setLoading(false); // Stop loading if no token
                 return;
             }
 
@@ -43,6 +45,8 @@ const Profile = () => {
                 setProfile(data); // Assuming the API returns the full profile object
             } catch (err) {
                 setError((err as Error).message);
+            } finally {
+                setLoading(false); // Stop loading after fetch is complete
             }
         };
 
@@ -114,7 +118,11 @@ const Profile = () => {
         <div className="flex items-center justify-center min-h-screen bg-background p-4">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full">
                 <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-200">Profile</h1>
-                {error ? (
+                {loading ? ( // Conditional rendering for loading state
+                    <div className="flex justify-center items-center h-40">
+                        <div className="loader"></div> {/* You can add your loader styles or component here */}
+                    </div>
+                ) : error ? (
                     <p className="mt-4 text-center text-red-500">{error}</p>
                 ) : (
                     <div className="mt-6 text-center">
