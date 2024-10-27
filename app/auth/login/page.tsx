@@ -1,12 +1,14 @@
 "use client"; // Ensure this directive is at the top
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const router = useRouter(); // Hook for navigation
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,7 +21,7 @@ const Login = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }), // Send the email and password
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
@@ -31,12 +33,13 @@ const Login = () => {
 
             // Check if the specific success message is present
             if (data.message === 'User logged in') {
+                localStorage.setItem('jwtToken', data.accessToken); // Store token in local storage
                 setSuccess('Login successful! Welcome back.');
+                router.push('/profile'); // Redirect to profile
             } else {
                 setError(data.message); // Display other messages
             }
 
-            // Store token or handle session here if needed
         } catch (err: any) {
             setError(err.message);
         }
