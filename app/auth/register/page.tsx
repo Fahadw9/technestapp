@@ -8,14 +8,14 @@ const Register = () => {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false); // State to manage loading status
 
+    const apiUrl = process.env.NEXT_PUBLIC_RAILWAYSPRODUCTION;
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setMessage(''); // Clear previous messages
         setLoading(true); // Set loading to true when the request starts
-
-        // Call the external register API directly
         try {
-            const response = await fetch('https://technestapi-production.up.railway.app/auth/register', {
+            const response = await fetch('${apiUrl}/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

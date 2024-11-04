@@ -20,6 +20,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(true); // State to track loading
     const [isSaving, setIsSaving] = useState(false); // State to track saving status
     const router = useRouter(); // Hook for navigation
+    const apiUrl = process.env.NEXT_PUBLIC_RAILWAYSPRODUCTION;
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -31,7 +32,7 @@ const Profile = () => {
             }
 
             try {
-                const response = await fetch('https://technestapi-production.up.railway.app/profile/myprofile', {
+                const response = await fetch('${apiUrl}/profile/myprofile', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
